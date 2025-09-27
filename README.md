@@ -76,6 +76,7 @@ Cada projeto poderá ser acessado diretamente pelo índice ou via link individua
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" width="50" alt="JavaScript" />
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" width="50" alt="GitHub" />
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fontawesome/fontawesome-plain.svg" width="50" alt="Font Awesome" />
+
 </p>
 
 ---
@@ -84,7 +85,7 @@ Cada projeto poderá ser acessado diretamente pelo índice ou via link individua
 
 ```bash
 # Clonar repositório
-git clone https://github.com/SEU-USUARIO/crud-front-projects.git
+git clone https://github.com/KarreiraDev-LuCamargo/crud-front-projects.git
 
 # Acessar a trilha
 cd crud-front-projects/trilha
