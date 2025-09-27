@@ -70,12 +70,17 @@ Cada projeto poderá ser acessado diretamente pelo índice ou via link individua
 ---
 
 ## 🛠️ Tecnologias Utilizadas
+
+
 <p align="center">
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" width="50" alt="HTML5" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" width="50" alt="CSS3" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" width="50" alt="JavaScript" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" width="50" alt="GitHub" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fontawesome/fontawesome-plain.svg" width="50" alt="Font Awesome" />
+  <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/html5.svg" width="50" alt="HTML5" />
+  <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/css3.svg" width="50" alt="CSS3" />
+  <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/javascript.svg" width="50" alt="JavaScript" />
+  <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/github.svg" width="50" alt="GitHub" />
+  <img src="https://cdn.simpleicons.org/fontawesome/339AF0" width="50" alt="Font Awesome" />
+</p>
+```
+
 
 </p>
 
