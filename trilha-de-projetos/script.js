@@ -1,271 +1,55 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-  <head>
-    <!-- Metadados -->
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <meta
-      name="description"
-      content="Trilha dos meus Projetos Frontend (HTML, CSS e JS)"
-    />
-    <meta name="author" content="Lu Camargo - KarreiraDev" />
-    <meta
-      name="keywords"
-      content="HTML, CSS, JavaScript, Frontend, Projetos, KarreiraDev, Lu Camargo"
-    />
-    <meta name="msapplication-TileColor" content="#ffffff" />
-    <meta
-      name="msapplication-TileImage"
-      content="./assets/favicon/ms-icon-144x144.png"
-    />
-    <meta name="theme-color" content="#ffffff" />
-    <!-- Ícone da aba -->
-    <link
-      rel="shortcut icon"
-      href="./img/favicon1_io/apple-icon-57x57.png"
-      type="image/x-icon"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="57x57"
-      href="./img/favicon/apple-icon-57x57.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="60x60"
-      href="./img/favicon/apple-icon-60x60.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="72x72"
-      href="./img/favicon/apple-icon-72x72.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="76x76"
-      href="./img/favicon/apple-icon-76x76.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="114x114"
-      href="./img/favicon/apple-icon-114x114.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="120x120"
-      href="./img/favicon/apple-icon-120x120.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="144x144"
-      href="./img/favicon/apple-icon-144x144.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="152x152"
-      href="./img/favicon/apple-icon-152x152.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="./img/favicon/apple-icon-180x180.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="192x192"
-      href="./img/favicon/android-icon-192x192.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="./img/favicon/favicon-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="96x96"
-      href="./img/favicon/favicon-96x96.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="./img/favicon/favicon-16x16.png"
-    />
-    <link rel="manifest" href="./img/favicon/manifest.json" />
+const themeToggle = document.getElementById('theme-toggle');
+themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    themeToggle.textContent =
+        document.body.classList.contains('dark-mode') ? '☀️ Light Mode' : '🌙 Dark Mode';
+});
 
-    <title>Trilha de Projetos Frontend</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <header>
-      <h1>Trilha de Projetos Frontend (HTML + CSS + JS)</h1>
-      <div class="tech-logos">
-        <img src="img/logo1.webp" alt="Logo KarreiraDev-LuCamargo" />
-        <img
-          src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg"
-          alt="HTML5 Logo"
-        />
-        <img
-          src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg"
-          alt="CSS3 Logo"
-        />
-        <img
-          src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
-          alt="JavaScript Logo"
-        />
-      </div>
-      <button id="theme-toggle">🌙 Dark Mode</button>
-    </header>
+const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+const progressText = document.getElementById("progress-text");
+const progressFill = document.getElementById("progress-fill");
 
-    <!-- Índice fixo -->
-    <nav id="side-menu">
-      <h3>📌 Níveis</h3>
-      <ul>
-        <li><a href="#nivel1">Nível 1 – Fundamentos</a></li>
-        <li><a href="#nivel2">Nível 2 – Lógica e Armazenamento</a></li>
-        <li><a href="#nivel3">Nível 3 – Layouts Interativos</a></li>
-        <li><a href="#nivel4">Nível 4 – Projetos Avançados</a></li>
-        <li><a href="#nivel5">Nível 5 – Projeto Integrador</a></li>
-      </ul>
-    </nav>
+// Atualizar progresso
+function updateProgress() {
+  const total = checkboxes.length;
+  const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+  const percent = (checked / total) * 100;
 
-    <!-- Barra de progresso -->
-    <section class="progress-section">
-      <p>
-        <strong>Progresso:</strong>
-        <span id="progress-text">0 de 11 concluídos</span>
-      </p>
-      <div class="progress-bar">
-        <div id="progress-fill"></div>
-      </div>
-    </section>
+  progressText.textContent = `${checked} de ${total} concluídos`;
+  progressFill.style.width = `${percent}%`;
+}
 
-    <main>
-      <!-- Nível 1 -->
-      <section id="nivel1">
-        <h2>Nível 1 – Fundamentos</h2>
-        <ul>
-          <li>
-            <label
-              ><input type="checkbox" />
-              <h3>Landing Page Responsiva com Dark/Light Mode</h3></label
-            >
-            <p>
-              <strong>Foco:</strong> HTML semântico, CSS Grid/Flexbox,
-              manipulação de classes no JS.
-            </p>
-          </li>
-          <li>
-            <label
-              ><input type="checkbox" />
-              <h3>Calculadora Simples</h3></label
-            >
-            <p><strong>Foco:</strong> layout em Grid + eventos JS.</p>
-          </li>
-          <li>
-            <label
-              ><input type="checkbox" />
-              <h3>Relógio Digital + Analógico</h3></label
-            >
-            <p><strong>Foco:</strong> setInterval() e manipulação do DOM.</p>
-          </li>
-        </ul>
-      </section>
+// Carregar estado salvo dos checkboxes
+checkboxes.forEach((checkbox, index) => {
+  const saved = localStorage.getItem(`project-${index}`);
+  if (saved === "true") checkbox.checked = true;
 
-      <!-- Nível 2 -->
-      <section id="nivel2">
-        <h2>Nível 2 – Lógica e Armazenamento</h2>
-        <ul>
-          <li>
-            <label
-              ><input type="checkbox" />
-              <h3>To-Do List com LocalStorage</h3></label
-            >
-            <p><strong>Foco:</strong> CRUD no front.</p>
-          </li>
-          <li>
-            <label
-              ><input type="checkbox" />
-              <h3>Gerador de Senhas Aleatórias 🔑</h3></label
-            >
-            <p>
-              <strong>Foco:</strong> strings dinâmicas + manipulação de
-              formulário.
-            </p>
-          </li>
-        </ul>
-      </section>
+  checkbox.addEventListener("change", () => {
+    localStorage.setItem(`project-${index}`, checkbox.checked);
+    updateProgress();
+  });
+});
 
-      <!-- Nível 3 -->
-      <section id="nivel3">
-        <h2>Nível 3 – Layouts Interativos</h2>
-        <ul>
-          <li>
-            <label
-              ><input type="checkbox" />
-              <h3>Galeria de Imagens com Lightbox</h3></label
-            >
-            <p><strong>Foco:</strong> grid responsivo + modal em JS.</p>
-          </li>
-          <li>
-            <label
-              ><input type="checkbox" />
-              <h3>Carrossel de Imagens 🎠</h3></label
-            >
-            <p><strong>Foco:</strong> transições CSS + timers em JS.</p>
-          </li>
-        </ul>
-      </section>
+// Dark mode
+function applyTheme(theme) {
+  if (theme === "dark") {
+    document.body.classList.add("dark");
+    themeToggle.textContent = "☀️ Light Mode";
+  } else {
+    document.body.classList.remove("dark");
+    themeToggle.textContent = "🌙 Dark Mode";
+  }
+  localStorage.setItem("theme", theme);
+}
 
-      <!-- Nível 4 -->
-      <section id="nivel4">
-        <h2>Nível 4 – Projetos Avançados</h2>
-        <ul>
-          <li>
-            <label
-              ><input type="checkbox" />
-              <h3>Quiz Interativo</h3></label
-            >
-            <p><strong>Foco:</strong> lógica condicional, arrays, pontuação.</p>
-          </li>
-          <li>
-            <label
-              ><input type="checkbox" />
-              <h3>Jogo da Velha (Tic Tac Toe)</h3></label
-            >
-            <p>
-              <strong>Foco:</strong> tabuleiro dinâmico + algoritmos simples.
-            </p>
-          </li>
-        </ul>
-      </section>
+themeToggle.addEventListener("click", () => {
+  const isDark = document.body.classList.contains("dark");
+  applyTheme(isDark ? "light" : "dark");
+});
 
-      <!-- Nível 5 -->
-      <section id="nivel5">
-        <h2>Nível 5 – Projeto Integrador</h2>
-        <ul>
-          <li>
-            <label
-              ><input type="checkbox" />
-              <h3>Clima Fake / Dashboard de Widgets</h3></label
-            >
-            <p><strong>Foco:</strong> cards, clima, relógio, notas, etc.</p>
-          </li>
-          <li>
-            <label
-              ><input type="checkbox" />
-              <h3>Portfólio Pessoal Animado 🎨</h3></label
-            >
-            <p><strong>Foco:</strong> animações, scroll suave, site final.</p>
-          </li>
-        </ul>
-      </section>
-    </main>
+// Carregar tema salvo
+const savedTheme = localStorage.getItem("theme") || "light";
+applyTheme(savedTheme);
 
-    <script src="script.js"></script>
-  </body>
-</html>
+// Inicializar progresso
+updateProgress();
