@@ -1,0 +1,22 @@
+/* Links */
+body.dark a {
+  color: #80caff;
+}
+
+body.dark a::after {
+  background-color: #80caff;
+}
+
+/* Barra de progresso */
+body.dark .progress-bar {
+  background: #333;
+}
+
+body.dark #progress-fill {
+  background: linear-gradient(90deg, #4da6ff, #80caff);
+}
+
+/* Subtítulos h3 */
+body.dark h3 {
+  color: #b8b0b0ff;
+}
