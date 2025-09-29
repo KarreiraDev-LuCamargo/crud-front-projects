@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>01 - Todo List | KarreiraDev Frontend</title>
+
+  <!-- SEO -->
+  <meta name="description" content="CRUD de tarefas com JavaScript puro. Inclui adicionar, editar, excluir e marcar concluídas, além de dark/light mode.">
+  <meta name="author" content="Luciano Camargo - KarreiraDev Frontend">
+  <meta name="keywords" content="CRUD, Todo List, JavaScript, LocalStorage, Dark Mode, KarreiraDev">
+
+  <!-- Open Graph (para redes sociais) -->
+  <meta property="og:title" content="01 - Todo List | KarreiraDev Frontend" />
+  <meta property="og:description" content="CRUD de tarefas com LocalStorage e dark mode." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://seuusuario.github.io/crud-front-projects/01-todo-list/" />
+  <meta property="og:image" content="logo.png" />
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="../../src/assets/favicon/apple-icon-57x57.png" type="image/x-icon" />
+  <link rel="apple-touch-icon" sizes="57x57" href="../../src/assets/favicon/apple-icon-57x57.png" />
+  <link rel="apple-touch-icon" sizes="60x60" href="../../src/assets/favicon/apple-icon-60x60.png" />
+  <link rel="apple-touch-icon" sizes="72x72" href="../../src/assets/favicon/apple-icon-72x72.png" />
+  <link rel="apple-touch-icon" sizes="76x76" href="../../src/assets/favicon/apple-icon-76x76.png" />
+  <link rel="apple-touch-icon" sizes="114x114" href="../../src/assets/favicon/apple-icon-114x114.png" />
+  <link rel="apple-touch-icon" sizes="120x120" href="../../src/assets/favicon/apple-icon-120x120.png" />
+  <link rel="apple-touch-icon" sizes="144x144" href="../../src/assets/favicon/apple-icon-144x144.png" />
+  <link rel="apple-touch-icon" sizes="152x152" href="../../src/assets/favicon/apple-icon-152x152.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="../../src/assets/favicon/apple-icon-180x180.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="../../src/assets/favicon/android-icon-192x192.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../src/assets/favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="96x96" href="../../src/assets/favicon/favicon-96x96.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="../../src/assets/favicon/favicon-16x16.png" />
+  <link rel="manifest" href="../../src/assets/favicon/manifest.json" />
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="alarm.css" />
+</head>
+
+<body>
+  <header>
+    <h1>
+      <img id="logo-header" src="../../src/assets/img/logo-oficial-kdlc-SF.webp" alt="Logo KarreiraDev" class="logo-header" />
+      01 - Todo List
+    </h1>
+    <div class="header-controls">
+      <button id="theme-toggle" aria-label="Alternar tema">🌙 Dark Mode</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="settings-section" aria-label="Configurações do alarme">
+      <form class="inline-form" onsubmit="return false;">
+        <label for="alarm-audio-input">Som do alarme:</label>
+        <input id="alarm-audio-input" type="file" accept="audio/*" />
+        <button id="test-alarm-btn" type="button">Testar som</button>
+
+        <label for="alarm-visual-select">Efeito visual:</label>
+        <select id="alarm-visual-select">
+          <option value="alarm-active">Piscante</option>
+          <option value="alarm-pulse">Pulse</option>
+        </select>
+      </form>
+    </section>
+
+    <section class="create-section">
+      <form id="task-form">
+        <input id="task-input" type="text" placeholder="Escreva sua tarefa" required />
+        <input id="task-time" type="datetime-local" aria-label="Definir lembrete (opcional)" />
+        <button id="add-task-btn" type="submit">Adicionar</button>
+      </form>
+    </section>
+
+    <section class="progress-section">
+      <div id="progress-text">0 de 0 concluídos</div>
+      <div class="progress-bar">
+        <div id="progress-fill"></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="tasks-title">
+      <h2 id="tasks-title">Minhas tarefas</h2>
+      <ul id="task-list" class="task-list"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      © 2025 KarreiraDev Frontend
+      <img id="logo-footer" src="../../src/assets/img/logo-oficial-kdlc-SF.webp" alt="Logo KarreiraDev" class="logo-footer" />
+    </p>
+  </footer>
+
+  <!-- Modal do Alarme -->
+  <div id="alarm-modal" class="alarm-modal" role="dialog" aria-hidden="true">
+    <div class="alarm-modal-content">
+      <h3 id="alarm-modal-title">Tarefa</h3>
+      <p id="alarm-modal-time">⏰ Prazo:</p>
+      <div class="alarm-modal-actions">
+        <button id="alarm-complete-btn">✅ Concluir</button>
+        <button id="alarm-silence-btn">🔕 Silenciar</button>
+        <button id="alarm-close-btn">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="alarm.js" defer></script>
+  <script src="script.js" defer></script>
+</body>
+</html>
