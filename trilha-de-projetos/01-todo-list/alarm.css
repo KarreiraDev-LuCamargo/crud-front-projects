@@ -1,27 +1,56 @@
-/* Evidência visual da tarefa em alarme */
+/* alarm.css - efeitos visuais do alarme (zoom = padrão) */
+
+/* ZOOM (padrão) — aumenta e chama atenção */
+.alarm-zoom {
+  animation: alarm-zoom 1s ease-in-out infinite;
+  border-left: 6px solid #ff3b30 !important;
+  background-color: #fff2f2 !important;
+  box-shadow: 0 8px 30px rgba(255,59,48,0.12);
+  transform-origin: left center;
+}
+@keyframes alarm-zoom {
+  0% { transform: scale(1); box-shadow: 0 6px 12px rgba(255,59,48,0.08); }
+  50% { transform: scale(1.04); box-shadow: 0 12px 30px rgba(255,59,48,0.16); }
+  100% { transform: scale(1); box-shadow: 0 6px 12px rgba(255,59,48,0.08); }
+}
+
+/* Piscante (blink) */
 .alarm-active {
   animation: blink-bg 1s infinite alternate;
   background-color: #ffdddd !important;
   border-left: 6px solid #ff0000 !important;
   box-shadow: 0 0 10px #ff0000;
-  transform: scale(1.02);
+}
+@keyframes blink-bg {
+  0% { background-color: #ffdddd; box-shadow: 0 0 10px #ff0000; }
+  100% { background-color: #ffffff; box-shadow: 0 0 2px #ff0000; }
 }
 
+/* Pulse */
 .alarm-pulse {
   animation: pulse 1s infinite;
   border-left: 6px solid #ff6600 !important;
   background-color: #fff3e0 !important;
   box-shadow: 0 0 10px #ff6600;
 }
-
-/* Animações */
-@keyframes blink-bg {
-  0%   { background-color: #ffdddd; box-shadow: 0 0 10px #ff0000; }
-  100% { background-color: #ffffff; box-shadow: 0 0 2px #ff0000; }
-}
-
 @keyframes pulse {
-  0%   { transform: scale(1); box-shadow: 0 0 2px #ff6600; }
-  50%  { transform: scale(1.05); box-shadow: 0 0 12px #ff6600; }
+  0% { transform: scale(1); box-shadow: 0 0 2px #ff6600; }
+  50% { transform: scale(1.05); box-shadow: 0 0 12px #ff6600; }
   100% { transform: scale(1); box-shadow: 0 0 2px #ff6600; }
 }
+
+/* Dark mode adjustment */
+body.dark .alarm-zoom,
+body.dark .alarm-active,
+body.dark .alarm-pulse {
+  background-color: rgba(255, 80, 80, 0.06) !important;
+  box-shadow: 0 6px 18px rgba(255,80,80,0.06) !important;
+  border-left-color: rgba(255,80,80,0.3) !important;
+}
+
+/* Silence button style used in task actions */
+.btn-silence {
+  border: none; background:transparent; cursor:pointer; padding:6px; border-radius:6px;
+}
+.btn-silence:hover { background: rgba(0,0,0,0.04); }
+body.dark .btn-silence:hover { background: rgba(255,255,255,0.04); }
