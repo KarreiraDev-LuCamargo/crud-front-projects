@@ -53,3 +53,17 @@ applyTheme(savedTheme);
 
 // Inicializar progresso
 updateProgress();
+
+function playAlarm(taskName) {
+  const audio = new Audio("alarm.mp3"); // coloque um mp3 na pasta do projeto
+  audio.play();
+  alert("⏰ Lembrete: " + taskName);
+}
+
+function highlightTask(taskId) {
+  const li = document.querySelector(`[data-id='${taskId}']`);
+  if (li) {
+    li.style.background = "#ffcccc";
+    li.style.animation = "blink 1s infinite";
+  }
+}
