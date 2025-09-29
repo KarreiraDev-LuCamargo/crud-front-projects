@@ -14,15 +14,26 @@ const themeToggle = document.getElementById("theme-toggle");
 const alarmAudioInput = document.getElementById("alarm-audio-input");
 const alarmVisualSelect = document.getElementById("alarm-visual-select");
 const testAlarmBtn = document.getElementById("test-alarm-btn");
+const stopTestBtn = document.getElementById("stop-test-btn");
 
 const alarmModal = document.getElementById("alarm-modal");
 const alarmModalTitle = document.getElementById("alarm-modal-title");
+const alarmModalNote = document.getElementById("alarm-modal-note");
 const alarmModalTime = document.getElementById("alarm-modal-time");
 const alarmCompleteBtn = document.getElementById("alarm-complete-btn");
 const alarmSilenceBtn = document.getElementById("alarm-silence-btn");
 const alarmCloseBtn = document.getElementById("alarm-close-btn");
 
+const editModal = document.getElementById("edit-modal");
+const editForm = document.getElementById("edit-form");
+const editText = document.getElementById("edit-text");
+const editTime = document.getElementById("edit-time");
+const editNote = document.getElementById("edit-note");
+const editSaveBtn = document.getElementById("edit-save-btn");
+const editCancelBtn = document.getElementById("edit-cancel-btn");
+
 let tasks = [];
+let editingTaskId = null;
 
 /* -------------------------
    Storage
@@ -57,32 +68,76 @@ function renderTasks() {
     li.dataset.id = task.id;
 
     const label = document.createElement("label");
-
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.checked = !!task.done;
+    checkbox.setAttribute("aria-label", "Marcar tarefa como concluída");
+
+    const content = document.createElement("div");
+    content.className = "task-content";
+
+    const top = document.createElement("div");
+    top.className = "task-top";
 
     const h3 = document.createElement("h3");
     h3.textContent = task.text;
 
-    label.appendChild(checkbox);
-    label.appendChild(h3);
+    top.appendChild(h3);
+    content.appendChild(top);
+
+    if (task.note) {
+      const note = document.createElement("div");
+      note.className = "task-note";
+      note.textContent = task.note;
+      note.style.fontSize = "0.9rem";
+      note.style.color = "var(--note-color, #666)";
+      content.appendChild(note);
+    }
 
     if (task.alarmAt) {
       const small = document.createElement("small");
-      small.textContent = `⏰ ${new Date(task.alarmAt).toLocaleString(
-        "pt-BR"
-      )}`;
-      label.appendChild(small);
+      try {
+        small.textContent = `⏰ ${new Date(task.alarmAt).toLocaleString(
+          "pt-BR"
+        )}`;
+      } catch (e) {
+        small.textContent = `⏰ ${task.alarmAt}`;
+      }
+      content.appendChild(small);
     }
+
+    label.appendChild(checkbox);
+    label.appendChild(content);
 
     const actions = document.createElement("div");
     actions.className = "task-actions";
 
     const editBtn = document.createElement("button");
+    editBtn.type = "button";
     editBtn.textContent = "✏️";
+    editBtn.title = "Editar tarefa";
+
     const deleteBtn = document.createElement("button");
+    deleteBtn.type = "button";
     deleteBtn.textContent = "🗑️";
+    deleteBtn.title = "Excluir tarefa";
+
+    // silence button shown when alarmTriggered
+    let silenceBtn = null;
+    if (task.alarmTriggered) {
+      silenceBtn = document.createElement("button");
+      silenceBtn.type = "button";
+      silenceBtn.innerHTML = "🔕";
+      silenceBtn.className = "btn-silence";
+      silenceBtn.title = "Parar alarme";
+      silenceBtn.addEventListener("click", () => {
+        if (window.AlarmManager) AlarmManager.silence(task.id);
+        task.alarmTriggered = false;
+        saveTasks();
+        renderTasks();
+      });
+      actions.appendChild(silenceBtn);
+    }
 
     actions.appendChild(editBtn);
     actions.appendChild(deleteBtn);
@@ -91,32 +146,37 @@ function renderTasks() {
     li.appendChild(actions);
     taskList.appendChild(li);
 
+    // If task already alarmTriggered and visual class applied, ensure it persists visually until silenced
+    if (task.alarmTriggered && window.AlarmManager) {
+      const visualClass =
+        AlarmManager && AlarmManager._visualClass
+          ? AlarmManager._visualClass
+          : null;
+      // we rely on AlarmManager to add the class on fire; here just ensure class presence
+      // (no direct access to private var; AlarmManager already handled class add)
+    }
+
+    /* -------- Events -------- */
     // checkbox
     checkbox.addEventListener("change", () => {
       task.done = checkbox.checked;
       if (checkbox.checked && window.AlarmManager) {
         AlarmManager.silence(task.id);
+        task.alarmTriggered = false;
       }
       saveTasks();
       updateProgress();
     });
 
-    // editar
+    // editar -> abrir modal de edição preenchida
     editBtn.addEventListener("click", () => {
-      const newText = prompt("Editar tarefa:", task.text);
-      if (newText !== null) {
-        task.text = newText.trim() || task.text;
-        saveTasks();
-        renderTasks();
-      }
+      openEditModal(task);
     });
 
     // excluir
     deleteBtn.addEventListener("click", () => {
-      if (confirm("Deseja excluir esta tarefa?")) {
-        if (window.AlarmManager) {
-          AlarmManager.cancelTask(task.id);
-        }
+      if (confirm("Deseja realmente excluir esta tarefa?")) {
+        if (window.AlarmManager) AlarmManager.cancelTask(task.id);
         tasks = tasks.filter((t) => t.id !== task.id);
         saveTasks();
         renderTasks();
@@ -134,7 +194,6 @@ function updateProgress() {
   const total = tasks.length;
   const completed = tasks.filter((t) => t.done).length;
   const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
-
   progressText.textContent = `${completed} de ${total} concluídos`;
   progressFill.style.width = `${percent}%`;
 }
@@ -151,6 +210,7 @@ taskForm.addEventListener("submit", (e) => {
   const newTask = {
     id: Date.now().toString(),
     text,
+    note: null,
     done: false,
     createdAt: new Date().toISOString(),
     alarmAt,
@@ -170,7 +230,7 @@ taskForm.addEventListener("submit", (e) => {
 });
 
 /* -------------------------
-   Theme toggle
+   Theme toggle (mantido)
    ------------------------- */
 function applyTheme(theme) {
   if (theme === "dark") {
@@ -182,7 +242,6 @@ function applyTheme(theme) {
   }
   localStorage.setItem("theme", theme);
 }
-
 themeToggle.addEventListener("click", () => {
   const isDark = document.body.classList.contains("dark");
   applyTheme(isDark ? "light" : "dark");
@@ -194,12 +253,15 @@ applyTheme(localStorage.getItem("theme") || "light");
    ------------------------- */
 function openAlarmModal(task) {
   alarmModalTitle.textContent = "Tarefa: " + task.text;
+  alarmModalNote.textContent = task.note ? task.note : "";
   alarmModalTime.textContent =
-    "⏰ Prazo: " + new Date(task.alarmAt).toLocaleString("pt-BR");
+    "⏰ Prazo: " +
+    (task.alarmAt ? new Date(task.alarmAt).toLocaleString("pt-BR") : "—");
   alarmModal.classList.add("active");
 
   alarmCompleteBtn.onclick = () => {
     task.done = true;
+    task.alarmTriggered = false;
     saveTasks();
     renderTasks();
     if (window.AlarmManager) AlarmManager.silence(task.id);
@@ -207,6 +269,9 @@ function openAlarmModal(task) {
   };
   alarmSilenceBtn.onclick = () => {
     if (window.AlarmManager) AlarmManager.silence(task.id);
+    task.alarmTriggered = false;
+    saveTasks();
+    renderTasks();
     closeAlarmModal();
   };
   alarmCloseBtn.onclick = closeAlarmModal;
@@ -214,6 +279,45 @@ function openAlarmModal(task) {
 function closeAlarmModal() {
   alarmModal.classList.remove("active");
 }
+
+/* -------------------------
+   Edit modal (editar texto, prazo, observação)
+   ------------------------- */
+function openEditModal(task) {
+  editingTaskId = task.id;
+  editText.value = task.text || "";
+  editTime.value = task.alarmAt || "";
+  editNote.value = task.note || "";
+  editModal.classList.add("active");
+}
+function closeEditModal() {
+  editingTaskId = null;
+  editModal.classList.remove("active");
+}
+
+editCancelBtn.addEventListener("click", () => {
+  closeEditModal();
+});
+editForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  if (!editingTaskId) return;
+  const task = tasks.find((t) => t.id === editingTaskId);
+  if (!task) return;
+  task.text = editText.value.trim() || task.text;
+  task.alarmAt = editTime.value || null;
+  task.note = editNote.value.trim() || null;
+  task.alarmTriggered = false; // reset trigger if editing
+  saveTasks();
+
+  // Re-register alarm if set
+  if (window.AlarmManager) {
+    AlarmManager.cancelTask(task.id);
+    if (task.alarmAt) AlarmManager.registerTask(task);
+  }
+
+  renderTasks();
+  closeEditModal();
+});
 
 /* -------------------------
    Eventos do AlarmManager
@@ -225,15 +329,16 @@ window.addEventListener("alarm:fired", (e) => {
     task.alarmTriggered = true;
     saveTasks();
     renderTasks();
+    // show modal
     openAlarmModal(task);
 
-    // 🔔 Notificação nativa
+    // native notification
     if ("Notification" in window && Notification.permission === "granted") {
       new Notification("⏰ Lembrete de tarefa", {
         body:
           task.text +
           "\nPrazo: " +
-          new Date(task.alarmAt).toLocaleString("pt-BR"),
+          (task.alarmAt ? new Date(task.alarmAt).toLocaleString("pt-BR") : ""),
         icon: "logo.png",
       });
     }
@@ -241,20 +346,31 @@ window.addEventListener("alarm:fired", (e) => {
 });
 
 /* -------------------------
-   Configuração de som/visual
+   Sound / Visual config + controls
    ------------------------- */
+// select change -> set visual class on AlarmManager
+alarmVisualSelect.addEventListener("change", (ev) => {
+  const cls = ev.target.value || "alarm-zoom";
+  if (window.AlarmManager) AlarmManager.setVisualClass(cls);
+  localStorage.setItem("alarmVisual", cls);
+});
+
+// choose audio file -> set audio src
 alarmAudioInput.addEventListener("change", (ev) => {
-  const file = ev.target.files[0];
+  const file = ev.target.files && ev.target.files[0];
   if (file) {
     const url = URL.createObjectURL(file);
     if (window.AlarmManager) AlarmManager.setAudioSrc(url);
+    localStorage.setItem("alarmAudioName", file.name);
   }
 });
-alarmVisualSelect.addEventListener("change", (ev) => {
-  if (window.AlarmManager) AlarmManager.setVisualClass(ev.target.value);
-});
+
+// Test & stop test
 testAlarmBtn.addEventListener("click", () => {
   if (window.AlarmManager) AlarmManager.playNow();
+});
+stopTestBtn.addEventListener("click", () => {
+  if (window.AlarmManager) AlarmManager.silenceAll();
 });
 
 /* -------------------------
@@ -262,16 +378,29 @@ testAlarmBtn.addEventListener("click", () => {
    ------------------------- */
 loadTasks();
 
-// Solicitar permissão para notificações no primeiro acesso
+// request notification permission once
 if ("Notification" in window && Notification.permission === "default") {
   Notification.requestPermission();
 }
 
+// init AlarmManager default visual = zoom
 if (window.AlarmManager) {
-  AlarmManager.init({ audioSrc: "alarm.mp3", visualClass: "alarm-active" });
+  const savedVisual = localStorage.getItem("alarmVisual") || "alarm-zoom";
+  const savedAudio = localStorage.getItem("alarmAudioName")
+    ? null
+    : "alarm.mp3";
+  AlarmManager.init({
+    audioSrc: savedAudio || "alarm.mp3",
+    visualClass: savedVisual,
+  });
+
+  // register pending alarms
   tasks.forEach((t) => {
     if (t.alarmAt && !t.alarmTriggered) AlarmManager.registerTask(t);
   });
+} else {
+  console.warn("AlarmManager não encontrado. Verifique alarm.js carregado.");
 }
+
 renderTasks();
 updateProgress();
